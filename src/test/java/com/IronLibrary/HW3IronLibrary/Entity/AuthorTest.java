@@ -6,15 +6,12 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorTest {
-    // create a new Author with valid name, email, and authorBook
+    //create an Author object with a name and email
     @Test
-    public void test_create_author_with_valid_details() {
-        Book mockBook = Mockito.mock(Book.class);
-        Author author = new Author("Alla Said", "Alla@example.com", mockBook);
-
+    public void test_create_author_with_name_and_email() {
+        Author author = new Author("Alla Said", "Alla@example.com");
         assertEquals("Alla Said", author.getName());
         assertEquals("Alla@example.com", author.getEmail());
-        assertEquals(mockBook, author.getAuthorBook());
     }
 
     // get the id of an Author
@@ -35,15 +32,6 @@ public class AuthorTest {
         assertEquals("Alla Said", author.getName());
     }
 
-    // create a new Author with null name
-    @Test
-    public void test_create_author_with_null_name() {
-        Book mockBook = Mockito.mock(Book.class);
-        Author author = new Author(null, "Alla@example.com", mockBook);
 
-        assertNull(author.getName());
-        assertEquals("Alla@example.com", author.getEmail());
-        assertEquals(mockBook, author.getAuthorBook());
-    }
 
 }

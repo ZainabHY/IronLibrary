@@ -1,9 +1,9 @@
 package com.IronLibrary.HW3IronLibrary;
 
+import com.IronLibrary.HW3IronLibrary.Entity.Author;
+import com.IronLibrary.HW3IronLibrary.Entity.Book;
 import com.IronLibrary.HW3IronLibrary.Repository.AuthorRepository;
 import com.IronLibrary.HW3IronLibrary.Repository.BookRepository;
-import com.IronLibrary.HW3IronLibrary.entity.Author;
-import com.IronLibrary.HW3IronLibrary.entity.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

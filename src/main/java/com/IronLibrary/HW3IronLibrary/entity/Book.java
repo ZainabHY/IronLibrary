@@ -1,4 +1,4 @@
-package com.IronLibrary.HW3IronLibrary.entity;
+package com.IronLibrary.HW3IronLibrary.Entity;
 
 import jakarta.persistence.*;
 import java.util.Objects;
@@ -72,5 +72,14 @@ public class Book {
                         ", quantity=" + quantity +
                         '}';
     }
+    @OneToOne
+    @JoinColumn(name = "student_id") // Add a foreign key column in the books table
+    private Student student;
 
+
+    public void setStudent(Student student) {
+    }
+
+    public void setQuantity(int i) {
+    }
 }

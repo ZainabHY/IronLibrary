@@ -1,10 +1,12 @@
-package com.IronLibrary.HW3IronLibrary.entity;
+package com.IronLibrary.HW3IronLibrary.Entity;
 
 import com.IronLibrary.HW3IronLibrary.Repository.AuthorRepository;
 import com.IronLibrary.HW3IronLibrary.Repository.BookRepository;
+import com.IronLibrary.HW3IronLibrary.Repository.StudentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class LibraryMethods {
@@ -107,6 +109,99 @@ public class LibraryMethods {
         } else
             System.err.println("Title Category not found");
     }
+    // method 4-search books by author
+    public void searchBooksByAuthor(AuthorRepository authorRepository, BookRepository bookRepository) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the name of the author: ");
+        String authorName = sc.nextLine();
+
+        // Find the author by name in the AuthorRepository
+        Optional<Author> authorOptional = authorRepository.findByName(authorName);
+
+        if (authorOptional.isPresent()) {
+            Author author = authorOptional.get();
+
+            // Find books by the author in the BookRepository
+            List<Book> booksByAuthor = bookRepository.findByAuthor(author);
+
+            if (!booksByAuthor.isEmpty()) {
+                System.out.println("Books by " + author.getName() + ":");
+                for (Book book : booksByAuthor) {
+                    System.out.println("ISBN: " + book.getIsbn() + ", Title: " + book.getTitle());
+                }
+            } else {
+                System.out.println("No books found by " + author.getName());
+            }
+        } else {
+            System.out.println("Author not found with the name: " + authorName);
+        }
+    }
+    // 5- list all books with authors
+    public void listBooksWithAuthors(BookRepository bookRepository) {
+        List<Book> allBooks = bookRepository.findAll();
+
+        if (!allBooks.isEmpty()) {
+            System.out.println("List of Books with Authors:");
+            for (Book book : allBooks) {
+                System.out.println("ISBN: " + book.getIsbn());
+                System.out.println("Title: " + book.getTitle());
+                System.out.println("Author: " + book.getAuthor().getName());
+                System.out.println();
+            }
+        } else {
+            System.out.println("No books found in the library.");
+        }
+    }
+    // method 7- issue book to student
+    public void issueBookToStudent(BookRepository bookRepository, StudentRepository studentRepository) {
+        Scanner sc = new Scanner(System.in);
+
+        // Get student information
+        System.out.print("Enter student ID: ");
+        long studentId = sc.nextLong();
+        sc.nextLine(); // Consume the newline character
+
+        // Find the student by ID in the StudentRepository
+        Optional<Student> studentOptional = studentRepository.findById(studentId);
+
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+
+            // Display available books
+            System.out.println("Available Books:");
+            List<Book> availableBooks = bookRepository.findAll();
+            for (Book book : availableBooks) {
+                System.out.println("ISBN: " + book.getIsbn() + ", Title: " + book.getTitle());
+            }
+
+            // Get the ISBN of the book to be issued
+            System.out.print("Enter the ISBN of the book to be issued: ");
+            String isbn = sc.nextLine();
+
+            // Find the book by ISBN in the BookRepository
+            Optional<Book> bookOptional = bookRepository.findById(isbn);
+
+            if (bookOptional.isPresent()) {
+                Book book = bookOptional.get();
+
+                // Check if the book is available
+                if (book.getQuantity() > 0) {
+                    // Issue the book to the student
+                    book.setQuantity(book.getQuantity() - 1);
+                    book.setStudent(student);
+                    bookRepository.save(book);
+                    System.out.println("Book issued to " + student.getName());
+                } else {
+                    System.out.println("The book is not available.");
+                }
+            } else {
+                System.out.println("Book with ISBN " + isbn + " not found.");
+            }
+        } else {
+            System.out.println("Student with ID " + studentId + " not found.");
+        }
+    }
+
 }
 
 
