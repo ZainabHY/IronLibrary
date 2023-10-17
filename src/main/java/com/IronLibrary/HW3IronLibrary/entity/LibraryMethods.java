@@ -1,6 +1,6 @@
 package com.IronLibrary.HW3IronLibrary.entity;
 
-
+// This class holds all commands (methods) user can use
 public class LibraryMethods {
 
     // 1. Add a book
