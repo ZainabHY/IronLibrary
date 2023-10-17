@@ -10,19 +10,20 @@ public class StartIronLibrary {
         LibraryMethods libraryMethods = new LibraryMethods();
         LibraryHelperMethods helperMethods = new LibraryHelperMethods();
 
-        System.out.println("\n\u001B[34m>>>> Welcome to Iron Library <<<<\u001B[0m");
-        System.out.println("***************************************************");
+        System.out.println("\n\u001B[34m>>>>           Welcome to Iron Library           <<<<\u001B[0m");
+        System.out.println("******************************************************");
+        System.out.println(">>>>    Thank you for using the Iron Library!     <<<<");
 
         boolean exit = false;
         int choice;
 
         while (!exit) {
             System.out.println("\u001B[33m>> Please choose one of the lists to view its commands\u001B[0m");
-            System.out.println("----------------------------------------------------");
+            System.out.println("------------------------------------------------------");
 
-            System.out.println("1. Search Book");
+            System.out.println("1. Managing Books");
             System.out.println("2. List Books");
-            System.out.println("3. Managing Books");
+            System.out.println("3. Search Book");
             System.out.println("4. Exit");
 
             System.out.print("\nYour choice: ");
@@ -41,21 +42,21 @@ public class StartIronLibrary {
 
             switch (choice) {
                 case 1:
-                    helperMethods.searchBookMenu();
+                    helperMethods.managingBooksMenu();
                     break;
-
 
                 case 2:
                     helperMethods.listBooksMenu();
                     break;
 
                 case 3:
-                    helperMethods.managingBooksMenu();
+                    helperMethods.searchBookMenu();
                     break;
 
                 case 4:
                     exit = true;
-                    System.out.println("\n\u001B[35mThank you for using the Iron Library!\u001B[0m");
+                    System.out.println("\n******************************************************");
+                    System.out.println("\u001B[34m>>>>    Thank you for using the Iron Library!     <<<<\u001B[0m");
                     break;
             }
         }
