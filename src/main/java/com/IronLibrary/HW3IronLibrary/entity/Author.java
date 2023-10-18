@@ -1,7 +1,7 @@
 package com.IronLibrary.HW3IronLibrary.entity;
+import com.IronLibrary.HW3IronLibrary.Entity.Book;
 
 import jakarta.persistence.*;
-
 import java.util.Objects;
 
 @Entity
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer  id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -22,7 +22,7 @@ public class Author {
     private Book authorBook;
 
 
-    public Author(String name, String email, Book authorBook) {
+    public Author(String name, String email) {
         this.name = name;
         this.email = email;
         this.authorBook = authorBook;
