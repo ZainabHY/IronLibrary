@@ -1,12 +1,30 @@
 package com.IronLibrary.HW3IronLibrary.entity;
 
+import com.IronLibrary.HW3IronLibrary.repository.AuthorRepository;
+import com.IronLibrary.HW3IronLibrary.repository.BookRepository;
+import com.IronLibrary.HW3IronLibrary.repository.IssueRepository;
+import com.IronLibrary.HW3IronLibrary.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 import java.util.Scanner;
 
 // This class holds the methods to arrange the code
 // including sub-menus
 public class LibraryHelperMethods {
+
     static Scanner scanner = new Scanner(System.in);
     LibraryMethods libraryMethods = new LibraryMethods();
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    AuthorRepository authorRepository;
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Autowired
+    IssueRepository issueRepository;
 
     // 1. Managing Books Menu
     public void managingBooksMenu()
@@ -48,19 +66,19 @@ public class LibraryHelperMethods {
 
             switch (choice) {
                 case 1:
-                    libraryMethods.addBook();
+                    libraryMethods.addBook(authorRepository,  bookRepository);
                     break;
 
                 case 2:
-                    libraryMethods.removeBook();
+                    libraryMethods.removeBook(bookRepository);
                     break;
 
                 case 3:
-                    libraryMethods.updateBook();
+                    libraryMethods.updateBook(bookRepository, authorRepository);
                     break;
 
                 case 4:
-                    libraryMethods.issueBookToStudent();
+                    libraryMethods.issueBookToStudent(bookRepository, studentRepository);
                     break;
 
                 case 5:
@@ -76,11 +94,10 @@ public class LibraryHelperMethods {
     // 2. List Books Menu
     public void listBooksMenu()
     {
-      // Contains:
+        // Contains:
         // List all books along with author
         // List books to be returned today
         // List books by USN
-        // Book recommendation
 
         boolean returnToMainMenu = false;
         int choice;
@@ -94,8 +111,7 @@ public class LibraryHelperMethods {
             System.out.println("1. List all books along with author");
             System.out.println("2. List books to be returned today");
             System.out.println("3. List books by USN");
-            System.out.println("4. Book recommendation");
-            System.out.println("5. Return to main menu");
+            System.out.println("4. Return to main menu");
 
             System.out.print("\nYour choice: ");
 
@@ -103,7 +119,7 @@ public class LibraryHelperMethods {
             while (true) {
                 try {
                     choice = Integer.parseInt(scanner.nextLine());
-                    if (choice < 1 || choice > 5) {
+                    if (choice < 1 || choice > 4) {
                         throw new NumberFormatException();
                     }
                     break;
@@ -114,22 +130,18 @@ public class LibraryHelperMethods {
 
             switch (choice) {
                 case 1:
-                    libraryMethods.listAllBooksWithAuthors();
+                    libraryMethods.listAllBooksWithAuthors(bookRepository);
                     break;
 
                 case 2:
-                    libraryMethods.listBooksReturnedToday();
+                    libraryMethods.listBooksReturnedToday(issueRepository, bookRepository);
                     break;
 
                 case 3:
-                    libraryMethods.listAllBooksByUsn();
+                    libraryMethods.listAllBooksByUsn(studentRepository);
                     break;
 
                 case 4:
-                    libraryMethods.bookRecommendation();
-                    break;
-
-                case 5:
                     returnToMainMenu = true;
                     break;
             }
@@ -179,15 +191,15 @@ public class LibraryHelperMethods {
 
             switch (choice) {
                 case 1:
-                    libraryMethods.searchBookByTitle();
+                    libraryMethods.searchBookByTitle(bookRepository);
                     break;
 
                 case 2:
-                    libraryMethods.searchBookByCategory();
+                    libraryMethods.searchBooksByCategory(bookRepository);
                     break;
 
                 case 3:
-                    libraryMethods.searchBookByAuthor();
+                    libraryMethods.searchBookByAuthor(bookRepository);
                     break;
 
                 case 4:

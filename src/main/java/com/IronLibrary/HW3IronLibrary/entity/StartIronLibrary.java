@@ -1,13 +1,19 @@
-package com.IronLibrary.HW3IronLibrary.entity;
+package com.IronLibrary.HW3IronLibrary;
+
+import com.IronLibrary.HW3IronLibrary.entity.LibraryHelperMethods;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Scanner;
 
-public class StartIronLibrary {
+@SpringBootApplication
+public class Hw3IronLibraryApplication {
+
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        SpringApplication.run(Hw3IronLibraryApplication.class, args);
 
-        LibraryMethods libraryMethods = new LibraryMethods();
         LibraryHelperMethods helperMethods = new LibraryHelperMethods();
 
         System.out.println("\n\u001B[34m>>>>           Welcome to Iron Library           <<<<\u001B[0m");
