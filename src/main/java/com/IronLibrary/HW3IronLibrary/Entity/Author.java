@@ -1,4 +1,4 @@
-package com.IronLibrary.HW3IronLibrary.Entity;
+package com.IronLibrary.HW3IronLibrary.entity;
 
 import jakarta.persistence.*;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer  id;
 
     @Column(name = "name")
     private String name;
@@ -31,11 +31,11 @@ public class Author {
     public Author() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

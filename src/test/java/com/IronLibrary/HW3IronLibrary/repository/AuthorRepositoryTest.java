@@ -1,11 +1,18 @@
-package com.IronLibrary.HW3IronLibrary.Entity;
+package com.IronLibrary.HW3IronLibrary.repository;
+
+import com.IronLibrary.HW3IronLibrary.entity.Author;
+import com.IronLibrary.HW3IronLibrary.entity.Book;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthorTest {
+public class AuthorRepositoryTest {
     // create a new Author with valid name, email, and authorBook
     @Test
     public void test_create_author_with_valid_details() {
@@ -21,7 +28,7 @@ public class AuthorTest {
     @Test
     public void test_get_author_id() {
         Author author = new Author();
-        author.setId(1L);
+        author.setId(1);
 
         assertEquals(1L, author.getId().longValue());
     }
