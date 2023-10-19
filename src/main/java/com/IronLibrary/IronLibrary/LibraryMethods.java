@@ -8,6 +8,9 @@ import com.IronLibrary.IronLibrary.repository.AuthorRepository;
 import com.IronLibrary.IronLibrary.repository.BookRepository;
 import com.IronLibrary.IronLibrary.repository.IssueRepository;
 import com.IronLibrary.IronLibrary.repository.StudentRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -121,6 +124,7 @@ public class LibraryMethods {
     }
 
 
+    // if student return a book >> we delete it from issue table
     public void deleteIssue(Integer issueId) {
         Optional<Issue> issueOptional = issueRepository.findById(issueId);
         Issue oldIssue = issueOptional.get();
@@ -138,6 +142,17 @@ public class LibraryMethods {
             return true;
         }
         return false;
+    }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+
+    public boolean isISBNAlreadyIssued(String isbn) {
+        Query query = entityManager.createQuery("SELECT COUNT(i) FROM Issue i WHERE i.issueBook.isbn = :isbn");
+        query.setParameter("isbn", isbn);
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
     }
 
 }

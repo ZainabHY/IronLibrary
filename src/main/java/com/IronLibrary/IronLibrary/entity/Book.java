@@ -6,18 +6,19 @@ import jakarta.persistence.Id;
 @Entity
 public class Book {
 
+//  isbn represents  International Standard Book Number
     @Id
     private String isbn;
-    private String authorName = null;
+    private String authorName;
     private String title;
     private String category;
     private Integer quantity;
 
-    public Book() {
-    }
+    public Book() {}
 
-    public Book(String isbn, String title, String category, Integer quantity) {
+    public Book(String isbn, String  authorName,String title, String category, Integer quantity) {
         this.isbn = isbn;
+        this.authorName = authorName;
         this.title = title;
         this.category = category;
         this.quantity = quantity;

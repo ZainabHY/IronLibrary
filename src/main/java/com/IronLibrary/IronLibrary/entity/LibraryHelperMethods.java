@@ -5,6 +5,8 @@ import com.IronLibrary.IronLibrary.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -29,6 +31,7 @@ public class LibraryHelperMethods {
     public static final String COLOR_YELLOW = "\u001B[33m";
     public static final String COLOR_BLUE = "\u001B[34m";
     public static final String COLOR_PURPLE = "\u001B[35m";
+    public static final String COLOR_CYAN = "\u001B[36m";
 
     public void userInteraction() {
 //        greeting();
@@ -154,7 +157,7 @@ public class LibraryHelperMethods {
         if (command == 1) {
             listBooksWithAuthor();
         } else if (command == 2) {
-//            listBooksToBeReturnedToday();
+//            getBooksToBeReturnedToday();
         } else if (command == 3) {
             listBooksByStudentNumber();
         } else if (command == 4) {
@@ -186,8 +189,8 @@ public class LibraryHelperMethods {
         String authorName;
         String email;
         int numberOfBooks;
-        System.out.println("\nEnter ISBN:");
-        System.out.println("(Format example: 978-9-51-045690-3)");
+        System.out.print("\nEnter ISBN:");
+        System.out.println(COLOR_CYAN + " (in Format: 978-9-51-045690-3)" + RESET_COLOR);
         isbn = validateIsbn();
         System.out.print("\nEnter title: ");
         title = validateString();
@@ -204,7 +207,7 @@ public class LibraryHelperMethods {
         email = validateEmail();
         System.out.print("\nEnter number of books: ");
         numberOfBooks = validateNumber();
-        Book book1 = new Book(isbn, title, category, numberOfBooks);
+        Book book1 = new Book(isbn, authorName, title, category, numberOfBooks);
         if (libraryMethods.insertBook(book1)) {
             System.out.println(COLOR_YELLOW + "\nWe already have some copies of book " + book1 +"\n" + RESET_COLOR);
             System.out.println(COLOR_PURPLE + ">> " + numberOfBooks + " will be added to our database! " + RESET_COLOR);
@@ -212,7 +215,7 @@ public class LibraryHelperMethods {
         } else {
             Author author1 = new Author(authorName, email, book1);
             libraryMethods.insertAuthor(author1);
-            System.out.println(COLOR_PURPLE + "\n>> We have added your book to our database! "+ RESET_COLOR);
+            System.out.println(COLOR_PURPLE + "\n>> We have added your book " + title +" to our database! "+ RESET_COLOR);
             System.out.println("\n----------------------------------\n");
         }
 
@@ -221,7 +224,7 @@ public class LibraryHelperMethods {
     public String validateName() {
         String name = null;
         while (name == null || name.isEmpty()) {
-            System.out.println("(minimum of 2 words)");
+            System.out.println(COLOR_CYAN + "(minimum of 2 words)" + RESET_COLOR);
             name = scanner.nextLine();
             if (!isValidName(name)) {
                 System.out.println(COLOR_RED + "Invalid name. Please enter a name with only letters and at least two words." + RESET_COLOR);
@@ -329,30 +332,24 @@ public class LibraryHelperMethods {
         }
     }
 
-//    private static void listBooksToBeReturnedToday() {
-//        // Find Books To Be Returned Today
-//        Optional<Book> optionalBook = issueRepository.findByReturnDate();
+
+//    public List<Book> getBooksToBeReturnedToday() {
+//        List<Book> booksToBeReturned = new ArrayList<>();
 //
-//        // Display the books to be returned today
-//        if (optionalBook.isEmpty()) {
-//            System.out.println(COLOR_YELLOW + "\nNo books to be returned today.." + RESET_COLOR);
-//        } else {
-//            System.out.println(COLOR_PURPLE+ "\nBooks to be returned today:");
-//            System.out.println("==================\n" + RESET_COLOR);
+//        //Get current date
+//        LocalDate currentDate = LocalDate.now();
+//        String currentDateString = String.valueOf(currentDate);
 //
-//            Book book = optionalBook.get();
-//            List<Book> booksList = Collections.singletonList(book);
-//            for (int i = 0; i < booksList.size(); i++) {
-//                book = booksList.get(i);
-//                System.out.println(COLOR_PURPLE +"Book #" + (i+1) + RESET_COLOR);
-//                System.out.println("Title: " + book.getTitle());
-//                System.out.println("Author: " + book.getAuthorName());
-//                System.out.println("Category: " + book.getCategory());
-//                System.out.println();
-//            }
+//        // Retrieve the list of issued books should be returned today
+//        List<Issue> issuedBooks = issueRepository.findAllByReturnDate(currentDateString);
+//
+//        // Iterate ove the issued books list and add them to the booksToBeReturned list
+//        for(Issue issue : issuedBooks)
+//        {
+//            booksToBeReturned.add(issue.getIssueBook());
 //        }
-//        System.out.println("\n----------------------------------\n");
 //
+//        return booksToBeReturned;
 //    }
 
     public void searchBookByCategory() {
@@ -427,27 +424,58 @@ public class LibraryHelperMethods {
         String isbn;
         Book book;
 
+        // Get current date
+        LocalDate currentDate = LocalDate.now();
+// Get date after 7 days
+        LocalDate dateAfter7Days = currentDate.plusDays(8); // Change the plusDays value to 6 instead of 7
+
+// Add a check to adjust the return date to the next year if necessary
+        if (dateAfter7Days.getYear() != currentDate.getYear()) {
+            dateAfter7Days = dateAfter7Days.withYear(currentDate.getYear());
+        }
+
+// Format the date as strings
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+// Save them in issueDate and returnDate as Strings
+        returnDate = dateAfter7Days.format(formatter);
+
         System.out.print("\nEnter usn: ");
         usn = validateString();
         System.out.print("\nEnter student name: ");
         studentName = validateName();
         System.out.print("\nEnter issue date: ");
         issueDate = validateString();
-        System.out.print("\nEnter return date: ");
-        returnDate = validateString();
         System.out.print("\nEnter ISBN: ");
         isbn = validateBook();
-        book = libraryMethods.getBookById(isbn);
-        if (book.getQuantity() == 0) {
-            System.out.println(COLOR_YELLOW + "\nSorry, There are no available copies of this book: "+ book);
-            System.out.println(" You may choose another book" + RESET_COLOR);
-        } else {
-            Student stu = new Student(usn, studentName);
-            libraryMethods.insertStudent(stu);
-            Issue issue = new Issue(issueDate, returnDate, stu, book);
-            libraryMethods.insertIssue(issue);
-            System.out.println(COLOR_PURPLE + "\n>> We have issued your book! " + book + RESET_COLOR);
-            System.out.println("\n----------------------------------\n");
+
+
+        // Check if the ISBN already exists in the issue table
+        if (libraryMethods.isISBNAlreadyIssued(isbn)) {
+            System.out.println(COLOR_YELLOW + "\nSorry, this book with ISBN " + isbn + " has already been issued to another student" + RESET_COLOR);
+            System.out.println("Please enter another ISBN");
+        }
+        else {
+            book = libraryMethods.getBookById(isbn);
+            if (book.getQuantity() == 0) {
+                System.out.println(COLOR_YELLOW + "\nSorry, There are no available copies of this book: " + book);
+                System.out.println(" You may choose another book" + RESET_COLOR);
+            }
+            else {
+                Student stu = new Student(usn, studentName);
+                libraryMethods.insertStudent(stu);
+                Issue issue = new Issue(issueDate, returnDate, stu, book);
+                libraryMethods.insertIssue(issue);
+                System.out.println(COLOR_PURPLE + "\n>> We have issued your book! " + book + RESET_COLOR);
+
+                System.out.println(COLOR_PURPLE + ">> List of books: " + RESET_COLOR);
+                System.out.println("\n\n");
+                System.out.printf(COLOR_GREEN + "%-17s  %-20s   %-10s   %-8s   %n", "Book ISBN", "Book Title", "Category", "Quantity" + RESET_COLOR);
+                    System.out.printf("%-17s  %-20s   %-10s   %-8s   %n", book.getIsbn(), book.getTitle(), book.getCategory(), book.getQuantity());
+                System.out.println("\n");
+                System.out.println(COLOR_PURPLE + "\n>> Return Date: " + returnDate + RESET_COLOR);
+                System.out.println("\n----------------------------------\n");
+            }
         }
     }
 
@@ -485,11 +513,11 @@ public class LibraryHelperMethods {
         exit=true;
         scanner.close();
         System.out.println("\n\n******************************************************");
-        System.out.println(COLOR_BLUE +">>>>    Thank you for using the Iron Library!     <<<<");
+        System.out.println(COLOR_BLUE +">>>>    Thank you for using the Iron Library!     <<<<\n\n" + RESET_COLOR);
     }
 
     public void returnToMainMenu(){
-        returnToMainMenu = true;
+//        returnToMainMenu = true;
         userInteraction();
     }
 
